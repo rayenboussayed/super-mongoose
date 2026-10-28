@@ -6,15 +6,34 @@ import markdown from "@eslint/markdown";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  { ignores: ["dist/**", "coverage/**", "package-lock.json", "screenshots/**"] },
-  globalIgnores(["node_modules", "dist"]),
+  globalIgnores([
+    "node_modules",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.output/**",
+    "**/.tanstack/**",
+    "package-lock.json",
+    "screenshots/**",
+    "apps/studio/src/routeTree.gen.ts",
+  ]),
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,tsx}"],
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: { globals: globals.node },
   },
-  tseslint.configs.recommended,
+  {
+    files: ["apps/studio/src/**/*.{ts,tsx}"],
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+  },
+  ...tseslint.configs.recommended,
+  {
+    files: ["**/*.tsx"],
+    languageOptions: {
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
   {
     files: ["**/*.json"],
     plugins: { json },

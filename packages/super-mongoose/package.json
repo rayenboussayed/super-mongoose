@@ -1,0 +1,52 @@
+{
+  "name": "super-mongoose",
+  "version": "1.0.0",
+  "description": "A migration layer for Mongoose, with the versioning of Prisma migrate and the desired state of Drizzle",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "super-mongoose": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src test",
+    "test": "vitest run --project unit",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:e2e": "npm run build && vitest run --project e2e",
+    "test:cov": "vitest run --coverage",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:cov"
+  },
+  "keywords": [
+    "mongoose",
+    "migration",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "peerDependencies": {
+    "mongoose": ">=6 <10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@vitest/coverage-v8": "^3.2.7",
+    "mongoose": "^9.11.2",
+    "vitest": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
