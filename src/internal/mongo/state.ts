@@ -1,5 +1,5 @@
 import { mongo } from "mongoose";
-import { canonicalJson, isSameIndexKey } from "../definition";
+import { canonicalJson } from "../definition";
 import type { IndexDefinition } from "../definition";
 import type { IndexDirectionValue } from "../../schemas/contract";
 import type { MongoDocument } from "./validator";

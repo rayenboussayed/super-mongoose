@@ -10,7 +10,7 @@ of each one, and the runner touches nothing else.
 
 ## Install
 
-```
+```bash
 npm install super-mongoose mongoose zod
 ```
 
@@ -65,7 +65,7 @@ do with it.
 | Status | Meaning |
 | --- | --- |
 | `up` | The element belongs to the contract, the layer creates it when it is missing. |
-| `down` | The element is retired, the layer drops it. The stored documents keep their value. |
+| `down` | A field is left out of the schema and the validator, an index is dropped. Stored field values are not changed. |
 | `ignore` | The element belongs to the application, the layer leaves it alone. |
 
 A contract that names a model declares the whole state of that model. A later
@@ -112,7 +112,7 @@ lock and the level and the action of the validator.
 const result = await runMigrations(contracts, {
   connection: mongoose.connection,
   log: (message) => console.log(message),
-  lock: { enabled: true, ttlSeconds: 300 },
+  lock: { ttlSeconds: 300 },
   validationLevel: "moderate",
   validationAction: "error",
 });
@@ -138,12 +138,13 @@ const DriverModel = defineModel(Driver);
 `Schem.fromContract(contract)` returns the schema alone when the application
 builds its own model.
 
-The schema has `autoIndex` off. The runner owns the indexes, so the
-application never creates one that the contract does not describe.
+The schema has `autoIndex` and `autoCreate` off. The runner owns the
+collection and its indexes, so the application never creates one that the
+contract does not describe.
 
 ## Use the command line
 
-```
+```bash
 MONGO_URL=mongodb://localhost:27017/drivers super-mongoose migrate plan --file contracts.mjs
 MONGO_URL=mongodb://localhost:27017/drivers super-mongoose migrate up --file contracts.mjs
 MONGO_URL=mongodb://localhost:27017/drivers super-mongoose migrate status --file contracts.mjs
@@ -152,8 +153,8 @@ MONGO_URL=mongodb://localhost:27017/drivers super-mongoose migrate status --file
 | Command | What it prints |
 | --- | --- |
 | `plan` | The operations a run would apply, the advisories and the conflicts. |
-| `up` | The versions the run applied and the indexes the contract does not own. |
-| `status` | The versions that were applied, the versions that are pending and the work left. |
+| `up` | The versions the run applied, the versions that were already applied and the operations it skipped. |
+| `status` | The applied versions with their time, the pending versions, the number of operations left and the conflicts. |
 
 The file of the contracts is a JavaScript module that exports an array of
 contracts, or an object with a `contracts` property. The `--database` flag
@@ -172,7 +173,7 @@ what the database holds.
 
 ## Test
 
-```
+```bash
 npm test
 npm run test:integration
 npm run test:e2e

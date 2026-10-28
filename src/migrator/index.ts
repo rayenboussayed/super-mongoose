@@ -20,7 +20,7 @@ import type {
 import { applyOperations, BENIGN_SKIP_REASON } from "./apply";
 import type { AppliedOperation, ApplyOptions } from "./apply";
 import { planModel } from "./plan";
-import type { MigrationOperation, ModelPlan } from "./plan";
+import type { ModelPlan } from "./plan";
 
 /** Options of the migration runner. */
 export interface MigratorOptions extends ApplyOptions {
