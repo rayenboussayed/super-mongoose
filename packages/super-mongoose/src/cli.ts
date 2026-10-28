@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
-import { pathToFileURL } from "node:url";
 import mongoose from "mongoose";
 import { MigrationError } from "./errors";
 import { migrationStatus, planMigrations, runMigrations } from "./migrator";
+import { loadContracts } from "./contracts";
 import type { MigrationPlan, MigratorOptions, MigrationsStatus, RunMigrationsResult } from "./migrator";
 import type { MigrationContractInput } from "./schemas/contract";
 
@@ -140,40 +140,7 @@ export function readCommand(positionals: string[]): MigrationCommand | undefined
     : undefined;
 }
 
-/**
- * Loads the contracts from a JavaScript module.
- *
- * The module exports an array of contracts.
- *
- * @param file - The path of the module.
- * @returns The contracts of the module.
- * @throws {MigrationError} With code `FILE_INVALID` when the module holds no contracts.
- */
-export async function loadContracts(file: string): Promise<MigrationContractInput[]> {
-  let loaded: unknown;
-
-  try {
-    loaded = await import(pathToFileURL(file).href);
-  } catch (error) {
-    throw new MigrationError(
-      "FILE_INVALID",
-      `the file "${file}" could not be loaded: ${formatError(error)}`,
-      { cause: error, context: { file } },
-    );
-  }
-
-  const value = (loaded as { default?: unknown }).default ?? loaded;
-
-  if (!Array.isArray(value)) {
-    throw new MigrationError(
-      "FILE_INVALID",
-      `the file "${file}" does not export an array of contracts`,
-      { context: { file } },
-    );
-  }
-
-  return value as MigrationContractInput[];
-}
+export { loadContracts } from "./contracts";
 
 /**
  * Runs the migration CLI as a process and sets the exit code of the process.

@@ -20,6 +20,8 @@ export type {
   MigrationStatus,
   MongooseTypeName,
 } from "./schemas/contract";
+export { loadContracts } from "./contracts";
+export type { ContractModule } from "./contracts";
 export { Schem } from "./mongoose/schema";
 export { defineModel } from "./mongoose/model";
 export { MIGRATION_ERROR_CODES, MigrationError } from "./errors";
